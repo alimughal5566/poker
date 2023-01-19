@@ -17,13 +17,13 @@ class ClientController extends Controller
 {
     /**
      * @var string
-     * Client ID: 983e6cf8-dc50-4d1f-8cf7-8fa52a0c983b
-     * Client secret: qdQaedBtrs6xXI7Lsg4HXrWl6XTfGE8WHkm0YegL
+     * Client ID: 98411558-7690-4ba4-8255-1f374b84a84a
+     * Client secret: S4wLT7FJfpAegyroLtHHMIBe2KXfJZQ28svpzqZH
      */
-    private $clientURL="https://poker.sportsbetsasia.com";
-    private $adminURL="https://gamezone.sportsbetsasia.com";
-    private $client_id="983e6cf8-dc50-4d1f-8cf7-8fa52a0c983b";
-    private $client_secret="qdQaedBtrs6xXI7Lsg4HXrWl6XTfGE8WHkm0YegL";
+    private $clientURL="http://poker.sportsbetsasia.com";
+    private $adminURL="http://gamezone.sportsbetsasia.com";
+    private $client_id="98411558-7690-4ba4-8255-1f374b84a84a";
+    private $client_secret="S4wLT7FJfpAegyroLtHHMIBe2KXfJZQ28svpzqZH";
     public function authCallback (Request $request){
 
     $request->session()->put("state",$state=Str::random(40));
@@ -55,7 +55,6 @@ class ClientController extends Controller
         return redirect('/authuser');
     }
     public function getUser(Request $request){
-//        dd($request);
         $access_token=$request->session()->get('access_token');
 
         $response = Http::withHeaders([
@@ -87,14 +86,13 @@ class ClientController extends Controller
     }
         public function sendUser(Request $request){
             if (Auth::guard('api')->check()){
-            $access_token=$request->get('access_token');
-
+                $access_token=$request->access_token;
             $response = Http::withHeaders([
                 'Accept'=>"application/json",
                 'Authorization'=>"Bearer " . $access_token
             ])->get($this->adminURL.'/api/user');
-            return $response->json();
 
+            return $response->json();
         }
     }
 

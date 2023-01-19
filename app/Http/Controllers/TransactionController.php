@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller{
-    private $clientURL="https://poker.sportsbetsasia.com";
-    private $adminURL="https://gamezone.sportsbetsasia.com";
-    private $client_id="983e6cf8-dc50-4d1f-8cf7-8fa52a0c983b";
-    private $client_secret="qdQaedBtrs6xXI7Lsg4HXrWl6XTfGE8WHkm0YegL";
+    private $clientURL="http://poker.sportsbetsasia.com";
+    private $adminURL="http://gamezone.sportsbetsasia.com";
+    private $client_id="98411558-7690-4ba4-8255-1f374b84a84a";
+    private $client_secret="S4wLT7FJfpAegyroLtHHMIBe2KXfJZQ28svpzqZH";
     public function sendUser(Request $request){
             if (Auth::guard('api')->check()){
-                $access_token=$request->header('access_token');
+                $access_token=$request->access_token;
 
                 $response = Http::withHeaders([
                     'Accept'=>"application/json",
@@ -26,9 +26,8 @@ class TransactionController extends Controller{
     }
 
     public function createRoom(Request $request){
-//        dd(Auth::guard('api')->check());
         if (Auth::guard('api')->check()){
-            $access_token=$request->header('access_token');
+            $access_token=$request->access_token;
 
             $response = Http::withHeaders([
                 'Accept'=>"application/json",
@@ -42,7 +41,7 @@ class TransactionController extends Controller{
                     "betting_level" => $request->betting_level,
                 ]);
             return $response;
-
+dd($response);
         }{
             return '{need login}';
         }
@@ -50,7 +49,7 @@ class TransactionController extends Controller{
 
     public function getRoom(Request $request){
         if (Auth::guard('api')->check()){
-            $access_token=$request->header('access_token');
+            $access_token=$request->access_token;
 
             $response = Http::withHeaders([
                 'Accept'=>"application/json",

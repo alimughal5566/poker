@@ -33,10 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/send_user',[ClientController::class, 'sendUser'])->name('send.user');
 
 Route::middleware('auth:sanctum')->group( function () {
-
-
-
-    Route::post('logout', [ClientController::class, 'signout'])->name('signout');
+    Route::post('/logout', [ClientController::class, 'signout'])->name('signout');
     Route::post('/create_room', [TransactionController::class, 'createRoom'])->name('createRoom');
     Route::post('/get_room', [TransactionController::class, 'getRoom'])->name('get.room');
 

@@ -44,13 +44,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function logoutFromSSOServer(){
         // send a revoke tokens
         $access_token=session()->get("access_token");
         $response=Http::withHeaders([
             'Accept'=>"application/json",
             'Authorization'=>"Bearer " . $access_token
-        ])->get("https://gamezone.sportsbetsasia.com/api/logmeout");
+        ])->get("http://gamezone.sportsbetsasia.com/api/logmeout");
         ;
     }
 }
