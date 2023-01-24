@@ -19,6 +19,7 @@ class TransactionController extends Controller{
                     'Accept'=>"application/json",
                     'Authorization'=>"Bearer " . $access_token
                 ])->get($this->adminURL.'/api/user');
+                dd($response);
                 return $response->json();
             }{
                 return '{need login}';
@@ -41,7 +42,6 @@ class TransactionController extends Controller{
                     "betting_level" => $request->betting_level,
                 ]);
             return $response;
-dd($response);
         }{
             return '{need login}';
         }

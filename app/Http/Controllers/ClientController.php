@@ -17,13 +17,13 @@ class ClientController extends Controller
 {
     /**
      * @var string
-     * Client ID: 98411558-7690-4ba4-8255-1f374b84a84a
-     * Client secret: S4wLT7FJfpAegyroLtHHMIBe2KXfJZQ28svpzqZH
+     * Client ID: 98428cc5-98fc-4f9c-bebe-74fc99739f35
+     * Client secret: knZl6c9tu48LnVPcYdgk3KepOhydPBlvfA9KuTcp
      */
-    private $clientURL="http://poker.sportsbetsasia.com";
-    private $adminURL="http://gamezone.sportsbetsasia.com";
-    private $client_id="98411558-7690-4ba4-8255-1f374b84a84a";
-    private $client_secret="S4wLT7FJfpAegyroLtHHMIBe2KXfJZQ28svpzqZH";
+    private $clientURL="https://card.s888-live.com";
+    private $adminURL="https://s888-live.com";
+    private $client_id="98428cc5-98fc-4f9c-bebe-74fc99739f35";
+    private $client_secret="knZl6c9tu48LnVPcYdgk3KepOhydPBlvfA9KuTcp";
     public function authCallback (Request $request){
 
     $request->session()->put("state",$state=Str::random(40));
@@ -81,6 +81,35 @@ class ClientController extends Controller
             'token' => $token,
             'access_token' => $access_token
         ];
+        return view('game_view',compact('response'));
+    }
+    public function sendUserAgainstAccess(Request $request){
+        $access_token=$request->session()->get('access_token');
+
+        $response = Http::withHeaders([
+            'Accept'=>"application/json",
+            'Authorization'=>"Bearer " . $access_token
+        ])->get($this->adminURL.'/api/user');
+        $useArray=$response->json();
+        try{
+            $email=$useArray['email'];
+        }catch (\Throwable $th){
+            return redirect("login")->withError("Failed to get Login Information ! Try again");
+        }
+        $user =User::where("email",$email)->first();
+        if(!$user){
+            $user=new User;
+            $user->name=$useArray['name'];
+            $user->email=$useArray['email'];
+            $user->email_verified_at=$useArray['email_verified_at'];
+            $user->save();
+        }
+        $token = $user->createToken('my-app-token')->plainTextToken;
+        $response = [
+            'user' => $user,
+            'token' => $token,
+            'access_token' => $access_token
+        ];
 //        dd($response);
         return view('game_view',compact('response'));
     }
@@ -91,8 +120,12 @@ class ClientController extends Controller
                 'Accept'=>"application/json",
                 'Authorization'=>"Bearer " . $access_token
             ])->get($this->adminURL.'/api/user');
+                    $data=new \stdClass();
+                $data->name=$response['name'];
+                $data->email=$response['email'];
+                $data->id=$response['id'];
 
-            return $response->json();
+            return $data;
         }
     }
 
